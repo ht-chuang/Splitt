@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splitt", "Splitt\Splitt.csproj", "{69DC3C0D-A275-4A69-AE5F-058F09E0E4DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplittLib", "SplittLib\SplittLib.csproj", "{D6E3FB1B-785F-47C1-9603-F46227A47034}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplittDB", "SplittDB\SplittDB.csproj", "{9BFB5D64-D5CB-413A-9BE3-5FD8F038287A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69DC3C0D-A275-4A69-AE5F-058F09E0E4DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69DC3C0D-A275-4A69-AE5F-058F09E0E4DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69DC3C0D-A275-4A69-AE5F-058F09E0E4DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69DC3C0D-A275-4A69-AE5F-058F09E0E4DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6E3FB1B-785F-47C1-9603-F46227A47034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6E3FB1B-785F-47C1-9603-F46227A47034}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6E3FB1B-785F-47C1-9603-F46227A47034}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6E3FB1B-785F-47C1-9603-F46227A47034}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BFB5D64-D5CB-413A-9BE3-5FD8F038287A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BFB5D64-D5CB-413A-9BE3-5FD8F038287A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BFB5D64-D5CB-413A-9BE3-5FD8F038287A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BFB5D64-D5CB-413A-9BE3-5FD8F038287A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
