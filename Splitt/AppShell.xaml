@@ -5,17 +5,23 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Splitt"
     xmlns:views="clr-namespace:Splitt.Views"
-    Shell.FlyoutBehavior="Flyout"
+    xmlns:models="clr-namespace:Splitt.Models"
     Title="Splitt">
 
-    <ShellContent
-        Title="CheckSplit"
-        ContentTemplate="{DataTemplate views:CheckSplitView}"
-        Route="CheckSplitView" />
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-
-
+    <TabBar>
+        <Tab Title="Home">
+            <Tab.Icon>
+                <FontImageSource FontFamily="FontAwesomeSolid"
+                                 Glyph="{x:Static models:FaIcons.House}"/>
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate local:MainPage}"/>
+        </Tab>
+        <Tab Title="Split">
+            <Tab.Icon>
+                <FontImageSource FontFamily="FontAwesomeSolid"
+                                 Glyph="{x:Static models:FaIcons.MoneyCheck}"/>
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate views:CheckSplitView}"/>
+        </Tab>
+    </TabBar>
 </Shell>
