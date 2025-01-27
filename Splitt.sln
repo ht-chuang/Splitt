@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplittLib", "SplittLib\Spli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplittDB", "SplittDB\SplittDB.csproj", "{9BFB5D64-D5CB-413A-9BE3-5FD8F038287A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplittTest", "SplittTest\SplittTest.csproj", "{B434262B-7F0E-4514-A5E8-2E25A1C28839}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{9BFB5D64-D5CB-413A-9BE3-5FD8F038287A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BFB5D64-D5CB-413A-9BE3-5FD8F038287A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BFB5D64-D5CB-413A-9BE3-5FD8F038287A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B434262B-7F0E-4514-A5E8-2E25A1C28839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B434262B-7F0E-4514-A5E8-2E25A1C28839}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B434262B-7F0E-4514-A5E8-2E25A1C28839}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B434262B-7F0E-4514-A5E8-2E25A1C28839}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
