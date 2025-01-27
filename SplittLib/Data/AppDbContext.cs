@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using SplittLib.Models;
 
@@ -7,10 +8,15 @@ namespace SplittLib.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public required DbSet<User> User { get; set; }
-        public required DbSet<UserFriend> UserFriend { get; set; }
-        public required DbSet<Check> Check { get; set; }
-        public required DbSet<CheckItem> CheckItem { get; set; }
+
+        [Required]
+        public DbSet<User> User { get; set; }
+        [Required]
+        public DbSet<UserFriend> UserFriend { get; set; }
+        [Required]
+        public DbSet<Check> Check { get; set; }
+        [Required]
+        public DbSet<CheckItem> CheckItem { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
