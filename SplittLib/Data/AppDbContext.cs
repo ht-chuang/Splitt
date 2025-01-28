@@ -9,15 +9,14 @@ namespace SplittLib.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-
         [Required]
-        public DbSet<User> User { get; set; }
+        public DbSet<User> User { get; set; } = null!;
         [Required]
-        public DbSet<UserFriend> UserFriend { get; set; }
+        public DbSet<UserFriend> UserFriend { get; set; } = null!;
         [Required]
-        public DbSet<Check> Check { get; set; }
+        public DbSet<Check> Check { get; set; } = null!;
         [Required]
-        public DbSet<CheckItem> CheckItem { get; set; }
+        public DbSet<CheckItem> CheckItem { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
