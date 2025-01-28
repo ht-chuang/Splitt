@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SplittLib.Models;
 
 namespace SplittLib.Data
@@ -20,46 +21,79 @@ namespace SplittLib.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // User Entity
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.HasKey(u => u.Id);
-                entity.HasIndex(u => new { u.Username, u.UsernameTag }).IsUnique();
-            });
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new UserFriendConfiguration());
+            modelBuilder.ApplyConfiguration(new CheckConfiguration());
+            modelBuilder.ApplyConfiguration(new CheckItemConfiguration());
 
-            modelBuilder.Entity<UserFriend>(entity =>
-            {
-                entity.HasKey(uf => new { uf.UserId, uf.FriendId });
+            base.OnModelCreating(modelBuilder);
+        }
+    }
 
-                // User -> UserFriend relationship
-                entity.HasOne(uf => uf.User)
-                    .WithMany(u => u.Friends)
-                    .HasForeignKey(uf => uf.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
+    internal class UserConfiguration : IEntityTypeConfiguration<User>
+    {
+        public void Configure(EntityTypeBuilder<User> builder)
+        {
+            builder.ToTable("User");
+            builder.HasKey(u => u.Id);
+            builder.HasIndex(u => new { u.Username, u.UsernameTag }).IsUnique();
+        }
+    }
 
-                // Friend -> UserFriend relationship
-                entity.HasOne(uf => uf.Friend)
-                    .WithMany()
-                    .HasForeignKey(uf => uf.FriendId)
-                    .OnDelete(DeleteBehavior.Cascade);
-            });
+    internal class UserFriendConfiguration : IEntityTypeConfiguration<UserFriend>
+    {
+        public void Configure(EntityTypeBuilder<UserFriend> builder)
+        {
+            builder.ToTable("UserFriend");
+            builder.HasKey(uf => new { uf.UserId, uf.FriendId });
 
-            modelBuilder.Entity<Check>(entity =>
-            {
-                entity.HasKey(c => c.Id);
+            // User -> UserFriend relationship
+            builder.HasOne(uf => uf.User)
+                   .WithMany(u => u.Friends)
+                   .HasForeignKey(uf => uf.UserId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
-                // User -> Check relationship
-                entity.HasOne(c => c.Owner)
-                      .WithMany(u => u.Checks)
-                      .HasForeignKey(c => c.OwnerId)
-                      .OnDelete(DeleteBehavior.Cascade);
+            // Friend -> UserFriend relationship
+            builder.HasOne(uf => uf.Friend)
+                   .WithMany()
+                   .HasForeignKey(uf => uf.FriendId)
+                   .OnDelete(DeleteBehavior.Cascade);
+        }
+    }
 
-                // Check -> CheckItem relationship
-                entity.HasMany(c => c.CheckItems)
-                      .WithOne(ci => ci.Check)
-                      .HasForeignKey(ci => ci.CheckId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
+    internal class CheckConfiguration : IEntityTypeConfiguration<Check>
+    {
+        public void Configure(EntityTypeBuilder<Check> builder)
+        {
+            builder.ToTable("Check");
+            builder.HasKey(c => c.Id);
+
+            // User -> Check relationship
+            builder.HasOne(c => c.Owner)
+                   .WithMany(u => u.Checks)
+                   .HasForeignKey(c => c.OwnerId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            // Check -> CheckItem relationship
+            builder.HasMany(c => c.CheckItems)
+                   .WithOne(ci => ci.Check)
+                   .HasForeignKey(ci => ci.CheckId)
+                   .OnDelete(DeleteBehavior.Cascade);
+        }
+    }
+
+    internal class CheckItemConfiguration : IEntityTypeConfiguration<CheckItem>
+    {
+        public void Configure(EntityTypeBuilder<CheckItem> builder)
+        {
+            builder.ToTable("CheckItem");
+            builder.HasKey(ci => ci.Id);
+
+            // CheckItem -> Check relationship
+            builder.HasOne(ci => ci.Check)
+                   .WithMany(c => c.CheckItems)
+                   .HasForeignKey(ci => ci.CheckId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
