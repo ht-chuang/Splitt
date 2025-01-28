@@ -2,11 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SplittLib.Data; // Assuming your DbContext is here
 using SplittLib.Models; // Assuming your Check model is here
-using System.Threading.Tasks;
 
 namespace SplittDB.Controllers;
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 public class CheckController : ControllerBase
 {
     private readonly AppDbContext _context;
@@ -16,14 +15,14 @@ public class CheckController : ControllerBase
         _context = context;
     }
 
-    // GET: api/Check
+    // GET: api/v1/Check
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Check>>> GetChecks()
     {
         return await _context.Check.ToListAsync();
     }
 
-    // GET: api/Check/5
+    // GET: api/v1/Check/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Check>> GetCheck(int id)
     {
@@ -37,7 +36,7 @@ public class CheckController : ControllerBase
         return check;
     }
 
-    // POST: api/Check
+    // POST: api/v1/Check
     [HttpPost]
     public async Task<ActionResult<Check>> PostCheck(Check check)
     {
@@ -47,7 +46,7 @@ public class CheckController : ControllerBase
         return CreatedAtAction(nameof(GetCheck), new { id = check.Id }, check);
     }
 
-    // PUT: api/Check/5
+    // PUT: api/v1/Check/5
     [HttpPut("{id}")]
     public async Task<IActionResult> PutCheck(int id, Check check)
     {
@@ -75,7 +74,7 @@ public class CheckController : ControllerBase
         return NoContent();
     }
 
-    // DELETE: api/Check/5
+    // DELETE: api/v1/Check/5
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCheck(int id)
     {
