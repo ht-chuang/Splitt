@@ -1,4 +1,5 @@
 using Bogus;
+using Microsoft.EntityFrameworkCore;
 using SplittLib.Models;
 
 namespace SplittLib.Data
@@ -28,6 +29,11 @@ namespace SplittLib.Data
             context.Check.AddRange(Checks);
             context.CheckItem.AddRange(CheckItems);
             context.SaveChanges();
+
+            context.Database.ExecuteSqlRaw("SELECT setval(pg_get_serial_sequence('\"Users\"', 'Id'), COALESCE((SELECT MAX(\"Id\") FROM \"Users\"), 1), false);");
+            context.Database.ExecuteSqlRaw("SELECT setval(pg_get_serial_sequence('\"UserFriends\"', 'Id'), COALESCE((SELECT MAX(\"Id\") FROM \"UserFriends\"), 1), false);");
+            context.Database.ExecuteSqlRaw("SELECT setval(pg_get_serial_sequence('\"Checks\"', 'Id'), COALESCE((SELECT MAX(\"Id\") FROM \"Checks\"), 1), false);");
+            context.Database.ExecuteSqlRaw("SELECT setval(pg_get_serial_sequence('\"CheckItems\"', 'Id'), COALESCE((SELECT MAX(\"Id\") FROM \"CheckItems\"), 1), false);");
         }
 
         private static IReadOnlyCollection<User> GenerateUsers(int amount)
