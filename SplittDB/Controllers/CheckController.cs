@@ -15,6 +15,18 @@ public class CheckController : ControllerBase
         _context = context;
     }
 
+    public class CheckDto
+    {
+        public required string Title { get; set; }
+        public required int OwnerId { get; set; }  // This replaces the Owner navigation property
+        public decimal Subtotal { get; set; }
+        public decimal Tax { get; set; }
+        public decimal Tip { get; set; }
+        public decimal Total { get; set; }
+        public DateTime Date { get; set; }
+        // Add any other properties needed for creation, but exclude navigation properties
+    }
+
     // GET: api/v1/Check
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Check>>> GetChecks()
@@ -38,8 +50,19 @@ public class CheckController : ControllerBase
 
     // POST: api/v1/Check
     [HttpPost]
-    public async Task<ActionResult<Check>> PostCheck(Check check)
+    public async Task<ActionResult<Check>> PostCheck([FromBody] CheckDto checkDto)
     {
+        var check = new Check
+        {
+            Title = checkDto.Title,
+            OwnerId = checkDto.OwnerId,
+            Subtotal = checkDto.Subtotal,
+            Tax = checkDto.Tax,
+            Tip = checkDto.Tip,
+            Total = checkDto.Total,
+            Date = checkDto.Date
+        };
+
         _context.Check.Add(check);
         await _context.SaveChangesAsync();
 

@@ -21,7 +21,7 @@
                 <FontImageSource FontFamily="FontAwesomeSolid"
                                  Glyph="{x:Static models:FaIcons.MoneyCheck}"/>
             </Tab.Icon>
-            <ShellContent ContentTemplate="{DataTemplate views:CheckSplitView}"/>
+            <ShellContent ContentTemplate="{DataTemplate views:ManageCheckView}"/>
         </Tab>
     </TabBar>
 </Shell>

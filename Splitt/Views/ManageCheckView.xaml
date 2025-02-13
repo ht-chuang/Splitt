@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="Splitt.Views.CheckSplitView"
+    x:Class="Splitt.Views.ManageCheckView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:models="clr-namespace:Splitt.Models">
+    xmlns:vm="clr-namespace:Splitt.ViewModels"
+    x:DataType="vm:ManageCheckViewModel">
+
+    <ContentPage.BindingContext>
+        <vm:ManageCheckViewModel/>
+    </ContentPage.BindingContext>
+
     <VerticalStackLayout
         Padding="30,0"
         Spacing="25">
@@ -25,11 +31,8 @@
             SemanticProperties.Description="Welcome to dot net Multi platform App U I"/> -->
 
         <Button
-            x:Name="CounterBtn"
-            Text="Click me"
-            SemanticProperties.Hint="Counts the number of times you click"
-            Clicked="OnCounterClicked"
-            VerticalOptions="Center"
-            HorizontalOptions="Fill"/>
+            Command="{Binding SubmitCommand}"
+            HorizontalOptions="Fill"
+            Text="New Check"/>
     </VerticalStackLayout>
 </ContentPage>
