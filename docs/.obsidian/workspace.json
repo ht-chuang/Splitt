@@ -1,0 +1,173 @@
+{
+  "main": {
+    "id": "59c3f7986d109d11",
+    "type": "split",
+    "children": [
+      {
+        "id": "bdbdecc1e2b05f83",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "cf76735dd4840697",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Runbooks/Database Operations.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Database Operations"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "67b8d6d0d3a3354c",
+    "type": "split",
+    "children": [
+      {
+        "id": "ab818f68ff5199c9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "eb75df4d1a2d4a47",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "e7ce6ba0b1cde547",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "617aa6c2d982fef3",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "ba6f155b0c76d5e1",
+    "type": "split",
+    "children": [
+      {
+        "id": "539e4945e77d3688",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6c2c7ba292d0d6b9",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Runbooks/Database Operations.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Database Operations"
+            }
+          },
+          {
+            "id": "d29c3d515749f8e6",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Runbooks/Database Operations.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Database Operations"
+            }
+          },
+          {
+            "id": "f82f4a1598a0d6e8",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "08dbca9967dd0512",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Runbooks/Database Operations.md"
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Database Operations"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "eb75df4d1a2d4a47",
+  "lastOpenFiles": [
+    "Runbooks/Entities and Model Classes.md",
+    "Runbooks/Database Operations.md",
+    "Runbooks/Secrets and ENV variables.md",
+    "dotNet MAUI.md",
+    "MAUI architecture.png"
+  ]
+}
