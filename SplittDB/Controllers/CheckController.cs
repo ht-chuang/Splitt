@@ -38,8 +38,19 @@ public class CheckController : ControllerBase
 
     // POST: api/v1/Check
     [HttpPost]
-    public async Task<ActionResult<Check>> PostCheck(Check check)
+    public async Task<ActionResult<Check>> PostCheck([FromBody] CheckDto checkDto)
     {
+        var check = new Check
+        {
+            Title = checkDto.Title,
+            OwnerId = checkDto.OwnerId,
+            Subtotal = checkDto.Subtotal,
+            Tax = checkDto.Tax,
+            Tip = checkDto.Tip,
+            Total = checkDto.Total,
+            Date = checkDto.Date
+        };
+
         _context.Check.Add(check);
         await _context.SaveChangesAsync();
 
