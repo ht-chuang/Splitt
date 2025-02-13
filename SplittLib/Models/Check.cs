@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SplittLib.Models
 {
@@ -6,17 +7,31 @@ namespace SplittLib.Models
     {
         [Key]
         public int Id { get; set; }
+
         [Required]
+        [StringLength(50, MinimumLength = 1)]
         public string Title { get; set; } = "New Check";
+
         [Required]
         public int OwnerId { get; set; }
+
         [Required]
-        public required User Owner { get; set; }
+        public virtual User Owner { get; set; } = null!;
+
         public DateTime Date { get; set; }
+
         public ICollection<CheckItem> CheckItems { get; set; } = new List<CheckItem>();
-        public decimal Subtotal { get; set; }
-        public decimal Tax { get; set; }
-        public decimal Tip { get; set; }
-        public decimal Total { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Subtotal { get; set; } = 0m;
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Tax { get; set; } = 0m;
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Tip { get; set; } = 0m;
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Total { get; set; } = 0m;
     }
 }
