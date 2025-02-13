@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SplittLib.Models;
@@ -9,13 +8,9 @@ namespace SplittLib.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        [Required]
         public DbSet<User> User { get; set; } = null!;
-        [Required]
         public DbSet<UserFriend> UserFriend { get; set; } = null!;
-        [Required]
         public DbSet<Check> Check { get; set; } = null!;
-        [Required]
         public DbSet<CheckItem> CheckItem { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -50,13 +45,15 @@ namespace SplittLib.Data
             builder.HasOne(uf => uf.User)
                    .WithMany(u => u.Friends)
                    .HasForeignKey(uf => uf.UserId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.Restrict);
 
             // Friend -> UserFriend relationship
             builder.HasOne(uf => uf.Friend)
                    .WithMany()
                    .HasForeignKey(uf => uf.FriendId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(uf => new { uf.UserId, uf.FriendId }).IsUnique();
         }
     }
 
@@ -87,12 +84,6 @@ namespace SplittLib.Data
         {
             builder.ToTable("CheckItem");
             builder.HasKey(ci => ci.Id);
-
-            // CheckItem -> Check relationship
-            builder.HasOne(ci => ci.Check)
-                   .WithMany(c => c.CheckItems)
-                   .HasForeignKey(ci => ci.CheckId)
-                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
