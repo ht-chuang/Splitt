@@ -12,6 +12,7 @@ namespace SplittLib.Data
         public DbSet<UserFriend> UserFriend { get; set; } = null!;
         public DbSet<Check> Check { get; set; } = null!;
         public DbSet<CheckItem> CheckItem { get; set; } = null!;
+        public DbSet<CheckMember> CheckMember { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -19,6 +20,7 @@ namespace SplittLib.Data
             modelBuilder.ApplyConfiguration(new UserFriendConfiguration());
             modelBuilder.ApplyConfiguration(new CheckConfiguration());
             modelBuilder.ApplyConfiguration(new CheckItemConfiguration());
+            modelBuilder.ApplyConfiguration(new CheckMemberConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
@@ -75,6 +77,12 @@ namespace SplittLib.Data
                    .WithOne(ci => ci.Check)
                    .HasForeignKey(ci => ci.CheckId)
                    .OnDelete(DeleteBehavior.Cascade);
+
+            // Check -> CheckMember relationship
+            builder.HasMany(c => c.CheckMembers)
+                   .WithOne(cm => cm.Check)
+                   .HasForeignKey(cm => cm.CheckId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 
@@ -84,6 +92,21 @@ namespace SplittLib.Data
         {
             builder.ToTable("CheckItem");
             builder.HasKey(ci => ci.Id);
+        }
+    }
+
+    internal class CheckMemberConfiguration : IEntityTypeConfiguration<CheckMember>
+    {
+        public void Configure(EntityTypeBuilder<CheckMember> builder)
+        {
+            builder.ToTable("CheckMember");
+            builder.HasKey(cm => cm.Id);
+
+            // User -> CheckMember relationship
+            builder.HasOne(cm => cm.User)
+                .WithMany(u => u.CheckMembers)
+                .HasForeignKey(cm => cm.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

@@ -22,6 +22,8 @@ namespace SplittLib.Models
 
         public ICollection<CheckItem> CheckItems { get; set; } = new List<CheckItem>();
 
+        public ICollection<CheckMember> CheckMembers { get; set; } = new List<CheckMember>();
+
         [Column(TypeName = "decimal(18,2)")]
         public decimal Subtotal { get; set; } = 0m;
 
