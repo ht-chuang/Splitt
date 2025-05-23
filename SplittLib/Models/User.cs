@@ -31,5 +31,7 @@ namespace SplittLib.Models
         public ICollection<UserFriend> Friends { get; set; } = new List<UserFriend>();
 
         public ICollection<Check> Checks { get; set; } = new List<Check>();
+
+        public ICollection<CheckMember> CheckMembers { get; set; } = new List<CheckMember>();
     }
 }

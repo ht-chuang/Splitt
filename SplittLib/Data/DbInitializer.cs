@@ -13,6 +13,7 @@ namespace SplittLib.Data
         public int NumberOfChecks { get; set; } = 15;
         public int MaxFriendsPerUser { get; set; } = 3;
         public int MaxItemsPerCheck { get; set; } = 10;
+        public int MaxMembersPerCheck { get; set; } = 5;
     }
 
     public class DbInitializer
@@ -24,6 +25,7 @@ namespace SplittLib.Data
         public IReadOnlyCollection<UserFriend> UserFriends { get; }
         public IReadOnlyCollection<Check> Checks { get; }
         public IReadOnlyCollection<CheckItem> CheckItems { get; }
+        public IReadOnlyCollection<CheckMember> CheckMembers { get; }
 
         public DbInitializer(int seed, SeedConfiguration config, ILogger<DbInitializer> logger)
         {
@@ -38,6 +40,7 @@ namespace SplittLib.Data
             UserFriends = GenerateUserFriends(Users, _config.MaxFriendsPerUser);
             Checks = GenerateChecks(_config.NumberOfChecks, Users);
             CheckItems = GenerateCheckItems(Checks, _config.MaxItemsPerCheck);
+            CheckMembers = GenerateCheckMembers(Checks, _config.MaxMembersPerCheck);
         }
 
         public async Task SeedAsync(AppDbContext context)
@@ -54,6 +57,7 @@ namespace SplittLib.Data
                 await context.UserFriend.AddRangeAsync(UserFriends);
                 await context.Check.AddRangeAsync(Checks);
                 await context.CheckItem.AddRangeAsync(CheckItems);
+                await context.CheckMember.AddRangeAsync(CheckMembers);
 
                 _logger.LogInformation("Saving changes to database");
                 await context.SaveChangesAsync();
@@ -88,8 +92,10 @@ namespace SplittLib.Data
                 if (idProperty.ValueGenerated == ValueGenerated.OnAdd)
                 {
                     _logger.LogDebug("Resetting sequence for table {TableName}", tableName);
+#pragma warning disable EF1002
                     await context.Database.ExecuteSqlRawAsync(
                         $"SELECT setval(pg_get_serial_sequence('\"{tableName}\"', '{idProperty.Name}'), (SELECT MAX(\"{idProperty.Name}\") FROM \"{tableName}\"));");
+#pragma warning restore EF1002
                 }
             }
         }
@@ -124,8 +130,8 @@ namespace SplittLib.Data
 
                 userFriends.AddRange(friends.Select(friend => new UserFriend
                 {
-                    UserId = user.Id,
-                    FriendId = friend.Id,
+                    User = user,
+                    Friend = friend,
                 }));
             }
 
@@ -138,7 +144,7 @@ namespace SplittLib.Data
             var checkFaker = new Faker<Check>()
                 .RuleFor(x => x.Id, f => checkId++)
                 .RuleFor(x => x.Title, f => f.Lorem.Sentence().ClampLength(1, 50))
-                .RuleFor(x => x.OwnerId, f => f.PickRandom(users).Id)
+                .RuleFor(x => x.Owner, f => f.PickRandom(users))
                 .RuleFor(x => x.Date, f => f.Date.Past().ToUniversalTime());
 
             return checkFaker.Generate(amount);
@@ -157,7 +163,7 @@ namespace SplittLib.Data
                     .RuleFor(x => x.Id, f => checkItemId++)
                     .RuleFor(x => x.Name, f => f.Commerce.ProductName().ClampLength(1, 50))
                     .RuleFor(x => x.Description, f => f.Lorem.Sentence().ClampLength(0, 255))
-                    .RuleFor(x => x.CheckId, f => check.Id)
+                    .RuleFor(x => x.Check, f => check)
                     .RuleFor(x => x.Quantity, f => f.Random.Number(1, 6))
                     .RuleFor(x => x.UnitPrice, f => Math.Round(f.Random.Decimal(1, 100), 2))
                     .RuleFor(x => x.TotalPrice, (f, ci) => Math.Round(ci.Quantity * ci.UnitPrice, 2));
@@ -175,6 +181,41 @@ namespace SplittLib.Data
             }
 
             return checkItems;
+        }
+
+        private static IReadOnlyCollection<CheckMember> GenerateCheckMembers(IEnumerable<Check> checks, int maxMembersPerCheck)
+        {
+            var checkMembers = new List<CheckMember>();
+            if (!checks.Any())
+                return checkMembers;
+
+            int checkMemberId = 1;
+            foreach (var check in checks)
+            {
+                var faker = new Faker();
+                var numberOfMembers = faker.Random.Number(1, maxMembersPerCheck);
+
+                // Ensure that the owner is always included in the members
+                var owner = new CheckMember
+                {
+                    Id = checkMemberId++,
+                    Name = check.Owner.Name,
+                    Check = check,
+                    User = check.Owner,
+                    AmountOwed = check.Total
+                };
+                checkMembers.Add(owner);
+
+                var checkMemberFaker = new Faker<CheckMember>()
+                    .RuleFor(x => x.Id, f => checkMemberId++)
+                    .RuleFor(x => x.Name, f => f.Name.FullName().ClampLength(2, 32))
+                    .RuleFor(x => x.Check, f => check);
+                var subCheckMembers = checkMemberFaker.Generate(numberOfMembers - 1);
+
+                checkMembers.AddRange(subCheckMembers);
+            }
+
+            return checkMembers;
         }
     }
 }
