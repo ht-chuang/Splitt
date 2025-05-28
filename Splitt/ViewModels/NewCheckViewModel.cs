@@ -2,14 +2,45 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Splitt.Views;
 using Splitt.Services;
+using SplittLib.Models;
+using System.Collections.ObjectModel;
+
 
 namespace Splitt.ViewModels
 {
     public partial class NewCheckViewModel : ObservableObject
     {
         private readonly CheckClient CheckClient = new CheckClient();
+        private readonly CheckItemClient CheckItemClient = new CheckItemClient();
 
-        private readonly UserClient UserClient = new UserClient();
+        public ObservableCollection<CheckItem> CheckItems { get; set; }
+
+        public NewCheckViewModel()
+        {
+            CheckItems = new ObservableCollection<CheckItem>();
+            _ = LoadChecksAsync(); // Fetch data on initialization
+        }
+
+        private async Task LoadChecksAsync()
+        {
+            try
+            {
+                var checkItemList = await CheckItemClient.GetCheckItems();
+
+                if (checkItemList != null)
+                {
+                    CheckItems.Clear();
+                    foreach (var check in checkItemList)
+                    {
+                        CheckItems.Add(check);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching checks: {ex.Message}");
+            }
+        }
 
         [ObservableProperty]
         private string _title = "New Check";
@@ -35,7 +66,6 @@ namespace Splitt.ViewModels
         [RelayCommand]
         private async Task Submit()
         {
-            // var current_user = await UserClient.GetUser(13);
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {
                 { "title", Title },
@@ -47,9 +77,9 @@ namespace Splitt.ViewModels
                 { "total", Total }
             };
 
-            var response = await CheckClient.CreateCheck(parameters);
+            var new_check = await CheckClient.CreateCheck(parameters);
 
-            await Shell.Current.GoToAsync(nameof(NewCheckItemView));
+            await Shell.Current.GoToAsync(nameof(SelectCheckItemView));
         }
     }
 

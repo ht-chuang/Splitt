@@ -4,17 +4,17 @@ using Splitt.Views;
 
 namespace Splitt.ViewModels
 {
-    [QueryProperty(nameof(CheckId), "checkId")]
-    public partial class NewCheckItemViewModel : ObservableObject
+    public partial class CheckItemViewModel : ObservableObject
     {
+
         // [ObservableProperty]
         // private string _name = "New Item";
 
-        [ObservableProperty]
-        private int _checkId = 1;
+        // [ObservableProperty]
+        // private string _description = "Item Description";
 
         // [ObservableProperty]
-        // private DateTime _date = DateTime.Now;
+        // private DateTime _date = DateTime.UtcNow;
 
         // [ObservableProperty]
         // private decimal _subtotal = 0;
