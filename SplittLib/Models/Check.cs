@@ -13,12 +13,12 @@ namespace SplittLib.Models
         public string Title { get; set; } = "New Check";
 
         [Required]
-        public int OwnerId { get; set; }
+        public int? OwnerId { get; set; }
 
         [Required]
         public virtual User Owner { get; set; } = null!;
 
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.UtcNow;
 
         public ICollection<CheckItem> CheckItems { get; set; } = new List<CheckItem>();
 

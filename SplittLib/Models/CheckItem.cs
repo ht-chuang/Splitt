@@ -16,7 +16,7 @@ namespace SplittLib.Models
         public string? Description { get; set; } = string.Empty;
 
         [Required]
-        public int CheckId { get; set; }
+        public int? CheckId { get; set; }
 
         [Required]
         public Check Check { get; set; } = null!;
