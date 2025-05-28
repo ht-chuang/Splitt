@@ -10,5 +10,6 @@ public partial class AppShell : Shell
 
 		Routing.RegisterRoute(nameof(NewCheckView), typeof(NewCheckView));
 		Routing.RegisterRoute(nameof(NewCheckItemView), typeof(NewCheckItemView));
+		Routing.RegisterRoute(nameof(SelectCheckItemView), typeof(SelectCheckItemView));
 	}
 }
