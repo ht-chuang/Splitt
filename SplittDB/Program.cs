@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SplittDB.Extensions;
 using SplittLib.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,7 +30,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString);
 });
 
+// Add services to the container
 builder.Services.AddControllers();
+builder.Services.AddValidationFilters();
+
 var app = builder.Build();
 
 // Seed data for development environment
@@ -58,5 +62,7 @@ if (app.Environment.IsDevelopment())
     }
 }
 
+// Routing
 app.MapControllers();
+
 app.Run();
