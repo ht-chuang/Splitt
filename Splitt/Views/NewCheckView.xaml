@@ -4,48 +4,65 @@
        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:vm="clr-namespace:Splitt.ViewModels"
-       x:DataType="vm:NewCheckViewModel">
+       x:DataType="vm:NewCheckViewModel"
+       xmlns:models="clr-namespace:SplittLib.Models;assembly=SplittLib">
 
        <ContentPage.BindingContext>
               <vm:NewCheckViewModel/>
        </ContentPage.BindingContext>
 
+
+
        <VerticalStackLayout Padding="20"
                             MaximumWidthRequest="600">
-              <VerticalStackLayout>
-                     <Label Text="Title"
-                            Margin="0,10,0,0"/>
-                     <Entry Margin="0,2,0,0"
-                            Text="{Binding Title}"/>
-                     <Label Text="Owner ID"
-                            Margin="0,10,0,0"/>
-                     <Entry Margin="0,2,0,0"
-                            Text="{Binding OwnerId}"/>
-                     <Label Text="Date"
-                            Margin="0,10,0,0"/>
-                     <Entry Margin="0,2,0,0"
-                            Text="{Binding Date}"/>
-                     <Label Text="Subtotal"
-                            Margin="0,10,0,0"/>
-                     <Entry Margin="0,2,0,0"
-                            Text="{Binding Subtotal}"/>
-                     <Label Text="Tax"
-                            Margin="0,10,0,0"/>
-                     <Entry Margin="0,2,0,0"
-                            Text="{Binding Tax}"/>
-                     <Label Text="Tip"
-                            Margin="0,10,0,0"/>
-                     <Entry Margin="0,2,0,0"
-                            Text="{Binding Tip}"/>
-                     <Label Text="Total"
-                            Margin="0,10,0,0"/>
-                     <Entry Margin="0,2,0,0"
-                            Text="{Binding Total}"/>
-              </VerticalStackLayout>
+
+
+              <Label Text="Title"
+                     Margin="0,10,0,0"/>
+              <Entry Margin="0,2,0,0"
+                     Text="{Binding Title}"/>
+              <Label Text="Owner ID"
+                     Margin="0,10,0,0"/>
+              <Entry Margin="0,2,0,0"
+                     Text="{Binding OwnerId}"/>
+              <Label Text="Date"
+                     Margin="0,10,0,0"/>
+              <Entry Margin="0,2,0,0"
+                     Text="{Binding Date}"/>
+              <Label Text="Subtotal"
+                     Margin="0,10,0,0"/>
+              <Entry Margin="0,2,0,0"
+                     Text="{Binding Subtotal}"/>
+              <Label Text="Tax"
+                     Margin="0,10,0,0"/>
+              <Entry Margin="0,2,0,0"
+                     Text="{Binding Tax}"/>
+              <Label Text="Tip"
+                     Margin="0,10,0,0"/>
+              <Entry Margin="0,2,0,0"
+                     Text="{Binding Tip}"/>
+              <Label Text="Total"
+                     Margin="0,10,0,0"/>
+              <Entry Margin="0,2,0,0"
+                     Text="{Binding Total}"/>
 
               <Button
                      Command="{Binding SubmitCommand}"
                      HorizontalOptions="Fill"
                      Text="Submit"/>
+
+
        </VerticalStackLayout>
+
+
+       <!-- <ListView ItemsSource="{Binding CheckItems}">
+              <ListView.ItemTemplate>
+                     <DataTemplate x:DataType="models:CheckItem">
+                            <ImageCell ImageSource="dotnet_bot.png"
+                                       Text="{Binding Name}"
+                                       Detail="{Binding Description}"/>
+                     </DataTemplate>
+              </ListView.ItemTemplate>
+       </ListView> -->
+
 </ContentPage>
