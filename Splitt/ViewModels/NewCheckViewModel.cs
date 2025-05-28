@@ -77,7 +77,7 @@ namespace Splitt.ViewModels
                 { "total", Total }
             };
 
-            var new_check = await CheckClient.CreateCheck(parameters);
+            var newCheck = await CheckClient.CreateCheck(parameters);
 
             await Shell.Current.GoToAsync(nameof(SelectCheckItemView));
         }
