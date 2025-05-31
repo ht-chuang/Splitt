@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SplittDB.DTOs.Check;
 using SplittDB.Filters.CheckFilters;
+using SplittDB.Filters.UserFilters;
 using SplittLib.Data;
 using SplittLib.Models;
 
@@ -28,6 +29,26 @@ public class CheckController : ControllerBase
             return NotFound();
 
         var output = GetCheckInfoDto(check);
+        return Ok(output);
+    }
+
+    // GET: api/v1/User/{userId}/Checks
+    [HttpGet]
+    [Route("/api/v1/user/{id}/checks")]
+    [ServiceFilter(typeof(ValidateUserIdAttribute))]
+    public async Task<IActionResult> GetChecksByUser(int id)
+    {
+        var user = await _context.User
+            .Include(u => u.Checks)
+            .FirstOrDefaultAsync(u => u.Id == id);
+        if (user == null)
+            return NotFound("User not found.");
+
+        var checks = user.Checks;
+        if (checks == null || !checks.Any())
+            return NotFound("No checks found for this user.");
+
+        var output = checks.Select(GetCheckInfoDto).ToList();
         return Ok(output);
     }
 
