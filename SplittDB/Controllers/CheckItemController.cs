@@ -42,7 +42,7 @@ public class CheckItemController : ControllerBase
             .Include(c => c.CheckItems)
             .FirstOrDefaultAsync(c => c.Id == id);
         if (check == null)
-            return NotFound();
+            return NotFound("Check not found.");
 
         var checkItems = check.CheckItems;
         if (checkItems == null || !checkItems.Any())
