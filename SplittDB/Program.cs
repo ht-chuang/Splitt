@@ -65,4 +65,10 @@ if (app.Environment.IsDevelopment())
 // Routing
 app.MapControllers();
 
+// Configure the HTTP request pipeline
+// app.UseHttpsRedirection(); // failed to determine https port for redirect
+// app.UseRouting();
+// app.UseAuthentication();
+// app.UseAuthorization();
+
 app.Run();
