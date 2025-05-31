@@ -51,7 +51,7 @@ public class CheckController : ControllerBase
         return CreatedAtAction(nameof(GetCheck), new { id = check.Id }, output);
     }
 
-    // PUT: api/v1/Check/{id}
+    // PATCH: api/v1/Check/{id}
     [HttpPatch("{id}")]
     [ServiceFilter(typeof(ValidateCheckIdAttribute))]
     [ServiceFilter(typeof(ValidatePatchCheckAttribute))]
