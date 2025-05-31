@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SplittLib.Data; // Assuming your DbContext is here
-using SplittLib.Models; // Assuming your Check model is here
+using SplittDB.DTOs.Check;
+using SplittDB.Filters.CheckFilters;
+using SplittLib.Data;
+using SplittLib.Models;
 
 namespace SplittDB.Controllers;
+
 [ApiController]
 [Route("api/v1/[controller]")]
 public class CheckController : ControllerBase
@@ -15,101 +18,97 @@ public class CheckController : ControllerBase
         _context = context;
     }
 
-    public class CheckDto
-    {
-        public required string Title { get; set; }
-        public required int OwnerId { get; set; }  // This replaces the Owner navigation property
-        public decimal Subtotal { get; set; }
-        public decimal Tax { get; set; }
-        public decimal Tip { get; set; }
-        public decimal Total { get; set; }
-        public DateTime Date { get; set; }
-        // Add any other properties needed for creation, but exclude navigation properties
-    }
-
-    // GET: api/v1/Check
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Check>>> GetChecks()
-    {
-        return await _context.Check.ToListAsync();
-    }
-
-    // GET: api/v1/Check/5
+    // GET: api/v1/Check/{id}
     [HttpGet("{id}")]
+    [ServiceFilter(typeof(ValidateCheckIdAttribute))]
     public async Task<ActionResult<Check>> GetCheck(int id)
     {
         var check = await _context.Check.FindAsync(id);
-
         if (check == null)
-        {
             return NotFound();
-        }
 
-        return check;
+        var output = GetCheckInfoDto(check);
+        return Ok(output);
     }
 
     // POST: api/v1/Check
     [HttpPost]
-    public async Task<ActionResult<Check>> PostCheck([FromBody] CheckDto checkDto)
+    [ServiceFilter(typeof(ValidatePostCheckAttribute))]
+    public async Task<ActionResult<Check>> PostCheck([FromBody] PostCheckDto requestBody)
     {
+        var postCheckDto = HttpContext.Items["ValidatedPostCheckDto"] as PostCheckDto;
         var check = new Check
         {
-            Title = checkDto.Title,
-            OwnerId = checkDto.OwnerId,
-            Subtotal = checkDto.Subtotal,
-            Tax = checkDto.Tax,
-            Tip = checkDto.Tip,
-            Total = checkDto.Total,
-            Date = checkDto.Date
+            OwnerId = postCheckDto!.OwnerId,
+            Title = !string.IsNullOrWhiteSpace(postCheckDto.Title) ? postCheckDto.Title : "New Check",
+            Date = postCheckDto.Date ?? DateTime.UtcNow
         };
 
         _context.Check.Add(check);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetCheck), new { id = check.Id }, check);
+        var output = GetCheckInfoDto(check);
+        return CreatedAtAction(nameof(GetCheck), new { id = check.Id }, output);
     }
 
-    // PUT: api/v1/Check/5
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutCheck(int id, Check check)
+    // PATCH: api/v1/Check/{id}
+    [HttpPatch("{id}")]
+    [ServiceFilter(typeof(ValidateCheckIdAttribute))]
+    [ServiceFilter(typeof(ValidatePatchCheckAttribute))]
+    public async Task<IActionResult> PatchCheck(int id, [FromBody] PatchCheckDto requestBody)
     {
-        if (id != check.Id)
-        {
-            return BadRequest();
-        }
+        var check = await _context.Check.FindAsync(id);
+        if (check == null)
+            return NotFound();
 
+        var patchCheckDto = HttpContext.Items["ValidatedPatchCheckDto"] as PatchCheckDto;
+        if (patchCheckDto!.Title != null)
+            check!.Title = patchCheckDto.Title;
+        if (patchCheckDto.Date != null)
+            check.Date = (DateTime)patchCheckDto.Date;
+        if (patchCheckDto.Subtotal != null)
+            check.Subtotal = (decimal)patchCheckDto.Subtotal;
+        if (patchCheckDto.Tax != null)
+            check.Tax = (decimal)patchCheckDto.Tax;
+        if (patchCheckDto.Tip != null)
+            check.Tip = (decimal)patchCheckDto.Tip;
+        if (patchCheckDto.Total != null)
+            check.Total = (decimal)patchCheckDto.Total;
         _context.Entry(check).State = EntityState.Modified;
 
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!_context.Check.Any(e => e.Id == id))
-            {
-                return NotFound();
-            }
-
-            throw;
-        }
-
-        return NoContent();
+        await _context.SaveChangesAsync();
+        await _context.Entry(check).ReloadAsync();
+        var output = GetCheckInfoDto(check);
+        return Ok(output);
     }
 
-    // DELETE: api/v1/Check/5
+    // DELETE: api/v1/Check/{id}
     [HttpDelete("{id}")]
+    [ServiceFilter(typeof(ValidateCheckIdAttribute))]
     public async Task<IActionResult> DeleteCheck(int id)
     {
         var check = await _context.Check.FindAsync(id);
         if (check == null)
-        {
             return NotFound();
-        }
 
         _context.Check.Remove(check);
         await _context.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    public CheckInfoDto GetCheckInfoDto(Check check)
+    {
+        return new CheckInfoDto
+        {
+            Id = check.Id,
+            Title = check.Title,
+            OwnerId = check.OwnerId,
+            Date = check.Date,
+            Subtotal = check.Subtotal,
+            Tax = check.Tax,
+            Tip = check.Tip,
+            Total = check.Total
+        };
     }
 }

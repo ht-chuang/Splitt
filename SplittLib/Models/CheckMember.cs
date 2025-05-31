@@ -13,7 +13,7 @@ namespace SplittLib.Models
         public string Name { get; set; } = "New Friend";
 
         [Required]
-        public int CheckId { get; set; }
+        public int? CheckId { get; set; }
 
         [Required]
         public Check Check { get; set; } = null!;

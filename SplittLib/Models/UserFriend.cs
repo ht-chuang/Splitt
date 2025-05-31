@@ -8,7 +8,7 @@ namespace SplittLib.Models
         [Key]
         [Column(Order = 0)]
         [Required]
-        public int UserId { get; set; } // Foreign key to the User
+        public int? UserId { get; set; } // Foreign key to the User
 
         [ForeignKey(nameof(UserId))]
         public User User { get; set; } = null!;
@@ -16,7 +16,7 @@ namespace SplittLib.Models
         [Key]
         [Column(Order = 1)]
         [Required]
-        public int FriendId { get; set; } // Foreign key to the "friend" User
+        public int? FriendId { get; set; } // Foreign key to the "friend" User
 
         [ForeignKey(nameof(FriendId))]
         public User Friend { get; set; } = null!;
