@@ -107,7 +107,7 @@ public class CheckMemberController : ControllerBase
         var patchCheckMemberDto = HttpContext.Items["ValidatedPatchCheckMemberDto"] as PatchCheckMemberDto;
         if (patchCheckMemberDto!.Name != null)
             checkMember.Name = patchCheckMemberDto.Name;
-        if (patchCheckMemberDto.UserId != null)
+        if (patchCheckMemberDto.HasProperty(nameof(patchCheckMemberDto.UserId)))
             checkMember.UserId = patchCheckMemberDto.UserId;
         if (patchCheckMemberDto.AmountOwed != null)
             checkMember.AmountOwed = (decimal)patchCheckMemberDto.AmountOwed;
@@ -135,7 +135,7 @@ public class CheckMemberController : ControllerBase
 
             if (patchCheckMemberDto.Name != null)
                 checkMember.Name = patchCheckMemberDto.Name;
-            if (patchCheckMemberDto.UserId != null)
+            if (patchCheckMemberDto.HasProperty(nameof(patchCheckMemberDto.UserId)))
                 checkMember.UserId = patchCheckMemberDto.UserId;
             if (patchCheckMemberDto.AmountOwed != null)
                 checkMember.AmountOwed = (decimal)patchCheckMemberDto.AmountOwed;
