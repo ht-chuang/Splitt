@@ -1,9 +1,9 @@
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
+
 
 namespace Splitt.Services;
+
 public class CheckClient
 {
     private readonly HttpClient _httpClient;
@@ -16,12 +16,32 @@ public class CheckClient
         };
     }
 
-    public async Task<HttpResponseMessage> CreateCheck(Dictionary<string, object> parameters)
+    public async Task<int> CreateCheck(Dictionary<string, object> parameters)
     {
-        var json = JsonSerializer.Serialize(parameters);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        try
+        {
+            var json = JsonSerializer.Serialize(parameters);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.PostAsync("http://localhost:5179/api/v1/Check", content);
-        return response;
+            var response = await _httpClient.PostAsync("http://localhost:5179/api/v1/Check", content);
+
+            if (!response.IsSuccessStatusCode)
+                return -1;
+
+            var responseJson = await response.Content.ReadAsStringAsync();
+
+            using JsonDocument doc = JsonDocument.Parse(responseJson);
+            JsonElement root = doc.RootElement;
+
+            int checkId = root.GetProperty("id").GetInt32();
+
+            return checkId;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating check: {ex.Message}");
+            return -1;
+        }
+
     }
 }

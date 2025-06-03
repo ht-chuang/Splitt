@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using SplittLib.Models;
 
 namespace Splitt.Services;
+
 public class CheckItemClient
 {
     private readonly HttpClient _httpClient;
@@ -31,17 +32,52 @@ public class CheckItemClient
         return response;
     }
 
-    public static CheckItem CreateCheckItem(string name, string description, int quantity, decimal unitPrice, decimal totalPrice, int checkId)
+    public async Task<CheckItem?> CreateCheckItem(Dictionary<string, object> parameters)
     {
-        return new CheckItem
+        try
         {
-            Name = name,
-            Description = description,
-            Quantity = quantity,
-            UnitPrice = unitPrice,
-            TotalPrice = totalPrice,
-            CheckId = checkId
-        };
+            var json = JsonSerializer.Serialize(parameters);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync("http://localhost:5179/api/v1/CheckItem", content);
+
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var jsonString = await response.Content.ReadAsStringAsync();
+
+            var checkItem = JsonSerializer.Deserialize<CheckItem>(jsonString, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            return checkItem;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating check: {ex.Message}");
+            return null;
+        }
+
+    }
+
+    public async Task<int> DeleteCheckItem(int id)
+    {
+        try
+        {
+            var response = await _httpClient.DeleteAsync($"http://localhost:5179/api/v1/CheckItem/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Error deleting check item with ID {id}: {response.ReasonPhrase}");
+                return -1;
+            }
+            return 1;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting check item: {ex.Message}");
+            return -1;
+        }
     }
 
 }

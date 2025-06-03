@@ -11,36 +11,37 @@ namespace Splitt.ViewModels
     public partial class NewCheckViewModel : ObservableObject
     {
         private readonly CheckClient CheckClient = new CheckClient();
-        private readonly CheckItemClient CheckItemClient = new CheckItemClient();
 
-        public ObservableCollection<CheckItem> CheckItems { get; set; }
+        // private readonly CheckItemClient CheckItemClient = new CheckItemClient();
 
-        public NewCheckViewModel()
-        {
-            CheckItems = new ObservableCollection<CheckItem>();
-            _ = LoadChecksAsync(); // Fetch data on initialization
-        }
+        // public ObservableCollection<CheckItem> CheckItems { get; set; }
 
-        private async Task LoadChecksAsync()
-        {
-            try
-            {
-                var checkItemList = await CheckItemClient.GetCheckItems();
+        // public NewCheckViewModel()
+        // {
+        //     CheckItems = new ObservableCollection<CheckItem>();
+        //     _ = LoadChecksAsync(); // Fetch data on initialization
+        // }
 
-                if (checkItemList != null)
-                {
-                    CheckItems.Clear();
-                    foreach (var check in checkItemList)
-                    {
-                        CheckItems.Add(check);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error fetching checks: {ex.Message}");
-            }
-        }
+        // private async Task LoadChecksAsync()
+        // {
+        //     try
+        //     {
+        //         var checkItemList = await CheckItemClient.GetCheckItems();
+
+        //         if (checkItemList != null)
+        //         {
+        //             CheckItems.Clear();
+        //             foreach (var check in checkItemList)
+        //             {
+        //                 CheckItems.Add(check);
+        //             }
+        //         }
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         Console.WriteLine($"Error fetching checks: {ex.Message}");
+        //     }
+        // }
 
         [ObservableProperty]
         private string _title = "New Check";
@@ -71,15 +72,19 @@ namespace Splitt.ViewModels
                 { "title", Title },
                 { "ownerId", 1 },
                 { "date", DateTime.SpecifyKind(Date, DateTimeKind.Utc) },
-                { "subtotal", Subtotal },
-                { "tax", Tax },
-                { "tip", Tip },
-                { "total", Total }
             };
 
-            var newCheck = await CheckClient.CreateCheck(parameters);
+            int newCheckId = await CheckClient.CreateCheck(parameters);
 
-            await Shell.Current.GoToAsync(nameof(SelectCheckItemView));
+            if (newCheckId == -1)
+            {
+                await Shell.Current.DisplayAlert("Error", "Failed to create check.", "OK");
+                return; // Don't navigate
+            }
+
+            // Only navigate if creation was successful
+            await Shell.Current.GoToAsync($"{nameof(SelectCheckItemView)}?checkId={newCheckId}");
+
         }
     }
 
