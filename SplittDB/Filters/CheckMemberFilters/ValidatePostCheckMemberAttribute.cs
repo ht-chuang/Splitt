@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using SplittDB.DTOs.CheckItem;
+using SplittDB.DTOs.CheckMember;
 using SplittLib.Data;
 
-namespace SplittDB.Filters.CheckItemFilters
+namespace SplittDB.Filters.CheckMemberFilters
 {
-    public class ValidatePostCheckItemAttribute : ValidationFilterAttribute
+    public class ValidatePostCheckMemberAttribute : ValidationFilterAttribute
     {
-        public ValidatePostCheckItemAttribute(AppDbContext context, ILogger<ValidatePostCheckItemAttribute> logger, ProblemDetailsFactory problemDetailsFactory)
+        public ValidatePostCheckMemberAttribute(AppDbContext context, ILogger<ValidatePostCheckMemberAttribute> logger, ProblemDetailsFactory problemDetailsFactory)
             : base(context, logger, problemDetailsFactory)
         {
         }
@@ -21,21 +21,28 @@ namespace SplittDB.Filters.CheckItemFilters
                 return false;
             }
 
-            if (requestBodyObj is not PostCheckItemDto postCheckItemDto)
+            if (requestBodyObj is not PostCheckMemberDto postCheckMemberDto)
             {
                 AddModelError(context, "", "Invalid request body format");
                 SetContextResult(context, StatusCodes.Status400BadRequest);
                 return false;
             }
 
-            if (await _context.Check.FindAsync(postCheckItemDto.CheckId) == null)
+            if (await _context.Check.FindAsync(postCheckMemberDto.CheckId) == null)
             {
                 AddModelError(context, "CheckId", "Check not found");
                 SetContextResult(context, StatusCodes.Status400BadRequest);
                 return false;
             }
 
-            context.HttpContext.Items["ValidatedPostCheckItemDto"] = postCheckItemDto;
+            if (postCheckMemberDto.UserId.HasValue && await _context.User.FindAsync(postCheckMemberDto.UserId.Value) == null)
+            {
+                AddModelError(context, "UserId", "User not found");
+                SetContextResult(context, StatusCodes.Status400BadRequest);
+                return false;
+            }
+
+            context.HttpContext.Items["ValidatedPostCheckMemberDto"] = postCheckMemberDto;
             return true;
         }
     }

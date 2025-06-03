@@ -42,7 +42,7 @@ public class CheckItemController : ControllerBase
             .Include(c => c.CheckItems)
             .FirstOrDefaultAsync(c => c.Id == id);
         if (check == null)
-            return NotFound();
+            return NotFound("Check not found.");
 
         var checkItems = check.CheckItems;
         if (checkItems == null || !checkItems.Any())
@@ -173,7 +173,6 @@ public class CheckItemController : ControllerBase
 
         _context.CheckItem.Remove(checkItem);
         await _context.SaveChangesAsync();
-
         return NoContent();
     }
 
@@ -190,7 +189,6 @@ public class CheckItemController : ControllerBase
 
         _context.CheckItem.RemoveRange(checkItems);
         await _context.SaveChangesAsync();
-
         return NoContent();
     }
 
