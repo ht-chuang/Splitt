@@ -173,7 +173,6 @@ public class CheckItemController : ControllerBase
 
         _context.Check.Remove(check);
         await _context.SaveChangesAsync();
-
         return NoContent();
     }
 
@@ -190,7 +189,6 @@ public class CheckItemController : ControllerBase
 
         _context.CheckItem.RemoveRange(checkItems);
         await _context.SaveChangesAsync();
-
         return NoContent();
     }
 
