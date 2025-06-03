@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SplittDB.DTOs.CheckItem;
 using SplittLib.Data;
 
-namespace SplittDB.Filters.CheckFilters
+namespace SplittDB.Filters.CheckItemFilters
 {
     public class ValidatePatchBulkCheckItemAttribute : ValidationFilterAttribute
     {
