@@ -106,11 +106,11 @@ public class CheckMemberController : ControllerBase
 
         var patchCheckMemberDto = HttpContext.Items["ValidatedPatchCheckMemberDto"] as PatchCheckMemberDto;
         if (patchCheckMemberDto!.Name != null)
-            requestBody.Name = patchCheckMemberDto.Name;
+            checkMember.Name = patchCheckMemberDto.Name;
         if (patchCheckMemberDto.UserId != null)
-            requestBody.UserId = patchCheckMemberDto.UserId;
+            checkMember.UserId = patchCheckMemberDto.UserId;
         if (patchCheckMemberDto.AmountOwed != null)
-            requestBody.AmountOwed = patchCheckMemberDto.AmountOwed;
+            checkMember.AmountOwed = (decimal)patchCheckMemberDto.AmountOwed;
         _context.Entry(checkMember).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
