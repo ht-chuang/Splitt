@@ -2,7 +2,8 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SplittLib.Models;
-using SplittLib.Services;
+using Splitt.Services;
+using System.Threading.Tasks;
 
 namespace Splitt.ViewModels
 
@@ -11,6 +12,8 @@ namespace Splitt.ViewModels
 
     public partial class SelectCheckItemViewModel : ObservableObject
     {
+
+        private readonly CheckItemClient CheckItemClient = new CheckItemClient();
 
         [ObservableProperty]
         private int _checkId = 0;
@@ -45,16 +48,40 @@ namespace Splitt.ViewModels
 
 
         [RelayCommand]
-        private void AddCheckItem()
+        private async Task AddCheckItem()
         {
-            var checkItem = CheckItemService.CreateCheckItem(Name, Description, Quantity, UnitPrice, TotalPrice, CheckId);
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { "name", Name },
+                { "description", Description },
+                { "quantity", Quantity },
+                { "unitPrice", UnitPrice },
+                { "totalPrice", TotalPrice },
+                { "checkId", CheckId }
+            };
+
+            CheckItem? checkItem = await CheckItemClient.CreateCheckItem(parameters);
+
+            if (checkItem == null)
+            {
+                await Shell.Current.DisplayAlert("Error", "Failed to create check.", "OK");
+                return;
+            }
+
             CheckItems.Add(checkItem);
             UpdateSubtotalAndTax();
             UpdateTotal();
         }
+
         [RelayCommand]
-        private void RemoveItem(CheckItem item)
+        private async Task RemoveItem(CheckItem item)
         {
+            int response = await CheckItemClient.DeleteCheckItem(item.Id);
+            if (response == -1)
+            {
+                await Shell.Current.DisplayAlert("Error", "Failed to delete check item.", "OK");
+                return;
+            }
             CheckItems.Remove(item);
             UpdateSubtotalAndTax();
             UpdateTotal();

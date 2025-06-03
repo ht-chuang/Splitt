@@ -165,13 +165,13 @@ public class CheckItemController : ControllerBase
     // DELETE: api/v1/CheckItem/{id}
     [HttpDelete("{id}")]
     [ServiceFilter(typeof(ValidateCheckItemIdAttribute))]
-    public async Task<IActionResult> DeleteCheck(int id)
+    public async Task<IActionResult> DeleteCheckItem(int id)
     {
-        var check = await _context.Check.FindAsync(id);
-        if (check == null)
+        var checkItem = await _context.CheckItem.FindAsync(id);
+        if (checkItem == null)
             return NotFound();
 
-        _context.Check.Remove(check);
+        _context.CheckItem.Remove(checkItem);
         await _context.SaveChangesAsync();
 
         return NoContent();
