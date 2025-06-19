@@ -9,7 +9,7 @@ public partial class AppShell : Shell
 		InitializeComponent();
 
 		Routing.RegisterRoute(nameof(NewCheckView), typeof(NewCheckView));
-		Routing.RegisterRoute(nameof(NewCheckItemView), typeof(NewCheckItemView));
 		Routing.RegisterRoute(nameof(SelectCheckItemView), typeof(SelectCheckItemView));
+		Routing.RegisterRoute(nameof(SplitCheckItemView), typeof(SplitCheckItemView));
 	}
 }
