@@ -1,9 +1,9 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Splitt.Views;
 using SplittLib.Models;
 using Splitt.Services;
-using System.Threading.Tasks;
 
 namespace Splitt.ViewModels
 
@@ -115,6 +115,12 @@ namespace Splitt.ViewModels
         private void UpdateTotal()
         {
             Total = Subtotal + Tax + Tip;
+        }
+
+        [RelayCommand]
+        private async Task Submit()
+        {
+            await Shell.Current.GoToAsync($"{nameof(SplitCheckItemView)}?checkId={CheckId}");
         }
     }
 
