@@ -18,9 +18,9 @@ public class CheckItemClient
         };
     }
 
-    public async Task<List<CheckItem>> GetCheckItems()
+    public async Task<List<CheckItem>> GetCheckItems(int checkId)
     {
-        var response = await _httpClient.GetAsync("CheckItem");
+        var response = await _httpClient.GetAsync($"Check/{checkId}/CheckItems");
         string json = await response.Content.ReadAsStringAsync();
         var checkItemList = JsonSerializer.Deserialize<List<CheckItem>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         return checkItemList ?? new List<CheckItem>();
