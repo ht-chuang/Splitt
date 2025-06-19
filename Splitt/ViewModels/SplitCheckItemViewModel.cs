@@ -65,6 +65,11 @@ namespace Splitt.ViewModels
         [RelayCommand]
         private async Task AddCheckMember()
         {
+            if (string.IsNullOrWhiteSpace(MemberName))
+            {
+                await Shell.Current.DisplayAlert("Error", "Please enter member name", "OK");
+                return;
+            }
             Dictionary<string, object?> parameters = new Dictionary<string, object?>
             {
                 { "checkId", CheckId },

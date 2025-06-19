@@ -50,6 +50,11 @@ namespace Splitt.ViewModels
         [RelayCommand]
         private async Task AddCheckItem()
         {
+            if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Description) || Quantity <= 0 || UnitPrice <= 0)
+            {
+                await Shell.Current.DisplayAlert("Error", "Please fill in all fields correctly", "OK");
+                return;
+            }
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {
                 { "name", Name },
@@ -104,7 +109,7 @@ namespace Splitt.ViewModels
         private void UpdateSubtotalAndTax()
         {
             Subtotal = CheckItems.Sum(item => item.TotalPrice);
-            Tax = Subtotal * 0.0725m;
+            Tax = Math.Round(Subtotal * 0.0725m, 2);
         }
 
         partial void OnTipChanged(decimal oldValue, decimal newValue)
