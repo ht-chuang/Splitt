@@ -145,6 +145,12 @@
                             FontSize="18"
                             FontAttributes="Bold"
                             TextColor="Black"/>
+
+                     <Button
+                            Command="{Binding SubmitCommand}"
+                            HorizontalOptions="Center"
+                            Margin="0,20,0,20"
+                            Text="Split Items"/>
               </VerticalStackLayout>
        </ScrollView>
 </ContentPage>
