@@ -136,15 +136,15 @@
                             Keyboard="Numeric"
                             TextChanged="OnTipChanged"/>
                      <Label Text="{Binding Subtotal, StringFormat='Subtotal: {0}'}"
-                            Margin="0,0,0,0"
+                            Margin="0,3,0,0"
                             FontSize="16"
                             FontAttributes="Bold"/>
                      <Label Text="{Binding Tax, StringFormat='Tax: {0}'}"
-                            Margin="0,0,0,0"
+                            Margin="0,3,0,0"
                             FontSize="16"
                             FontAttributes="Bold"/>
                      <Label Text="{Binding Total, StringFormat='Total: {0}'}"
-                            Margin="0,0,0,0"
+                            Margin="0,3,0,0"
                             FontSize="18"
                             FontAttributes="Bold"
                             TextColor="Black"/>
