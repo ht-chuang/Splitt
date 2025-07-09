@@ -16,6 +16,14 @@ public class CheckMemberClient
         };
     }
 
+    public async Task<List<CheckMember>> GetCheckMembersByCheck(int checkId)
+    {
+        var response = await _httpClient.GetAsync($"Check/{checkId}/CheckMembers");
+        string json = await response.Content.ReadAsStringAsync();
+        var checkMemberList = JsonSerializer.Deserialize<List<CheckMember>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        return checkMemberList ?? new List<CheckMember>();
+    }
+
     public async Task<CheckMember?> CreateCheckMember(Dictionary<string, object?> parameters)
     {
         try
