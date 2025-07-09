@@ -20,7 +20,7 @@ namespace Splitt.ViewModels
         private int _checkId = 0;
 
         [ObservableProperty]
-        private string _memberName = "New Check Member";
+        private string _memberName = "New Payee";
 
         [ObservableProperty]
         private ObservableCollection<CheckMemberWrapper> _checkMembers = [];
@@ -33,7 +33,13 @@ namespace Splitt.ViewModels
         partial void OnCheckIdChanged(int value)
         {
             // Called automatically when Shell sets the CheckId
-            _ = LoadCheckItemsAsync();
+            _ = LoadCheckAsync();
+        }
+
+        private async Task LoadCheckAsync()
+        {
+            await LoadCheckItemsAsync();
+            await LoadCheckMembersAsync();
         }
 
         public async Task LoadCheckItemsAsync()
@@ -59,6 +65,33 @@ namespace Splitt.ViewModels
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching checks: {ex.Message}");
+            }
+
+        }
+
+        public async Task LoadCheckMembersAsync()
+        {
+            try
+            {
+                List<CheckMember> checkMemberList = await CheckMemberClient.GetCheckMembersByCheck(CheckId);
+
+                if (checkMemberList != null)
+                {
+                    CheckMembers.Clear();
+                    foreach (var checkMember in checkMemberList)
+                    {
+                        var wrapper = new CheckMemberWrapper(checkMember);
+                        CheckMembers.Add(wrapper);
+                        foreach (var itemWrapper in CheckItemWrapper)
+                        {
+                            itemWrapper.AvailableMembers.Add(wrapper);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching check members: {ex.Message}");
             }
         }
 
