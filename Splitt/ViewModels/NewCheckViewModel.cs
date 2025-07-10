@@ -12,39 +12,8 @@ namespace Splitt.ViewModels
     {
         private readonly CheckClient CheckClient = new CheckClient();
 
-        // private readonly CheckItemClient CheckItemClient = new CheckItemClient();
-
-        // public ObservableCollection<CheckItem> CheckItems { get; set; }
-
-        // public NewCheckViewModel()
-        // {
-        //     CheckItems = new ObservableCollection<CheckItem>();
-        //     _ = LoadChecksAsync(); // Fetch data on initialization
-        // }
-
-        // private async Task LoadChecksAsync()
-        // {
-        //     try
-        //     {
-        //         var checkItemList = await CheckItemClient.GetCheckItems();
-
-        //         if (checkItemList != null)
-        //         {
-        //             CheckItems.Clear();
-        //             foreach (var check in checkItemList)
-        //             {
-        //                 CheckItems.Add(check);
-        //             }
-        //         }
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         Console.WriteLine($"Error fetching checks: {ex.Message}");
-        //     }
-        // }
-
         [ObservableProperty]
-        private string _title = "New Check";
+        private string _title = "New Check Title";
 
         [ObservableProperty]
         private int _ownerId = 1;
