@@ -35,7 +35,7 @@ public partial class SplitCheckItemView : ContentPage
         // 1. Undo previous split
         if (previouslySelected.Count > 0)
         {
-            // decimal previousSplit = item.TotalPrice / previouslySelected.Count;
+
             int prevBaseCents = totalCents / previouslySelected.Count;
             int prevRemainderCents = totalCents % previouslySelected.Count;
 
