@@ -3,13 +3,15 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SplittLib.Models;
 using Splitt.Services;
+using Splitt.Views;
 using Splitt.ViewModels.Wrappers;
-using Microsoft.Maui.Controls.Shapes;
 
 namespace Splitt.ViewModels
 
 {
     [QueryProperty(nameof(CheckId), "checkId")]
+    [QueryProperty(nameof(Tip), "tip")]
+    [QueryProperty(nameof(Tax), "tax")]
 
     public partial class SplitCheckItemViewModel : ObservableObject
     {
@@ -18,6 +20,11 @@ namespace Splitt.ViewModels
 
         [ObservableProperty]
         private int _checkId = 0;
+
+        [ObservableProperty]
+        private decimal _tip = 0;
+        [ObservableProperty]
+        private decimal _tax = 0;
 
         [ObservableProperty]
         private string _memberName = "New Payee";
@@ -95,6 +102,81 @@ namespace Splitt.ViewModels
             }
         }
 
+        // This method could be improved. Placeholder for now.
+        private void UpdateMemberTipTax(List<CheckMemberWrapper> currentMembers, List<CheckMemberWrapper> previousMembers)
+        {
+            if (currentMembers.Count == 0)
+            {
+                return; // No members to update
+            }
+
+            int totalTipTaxCents = (int)(Tip * 100) + (int)(Tax * 100); // Assuming Tip includes tax for simplicity
+
+            // 1. Undo previous split
+            if (previousMembers.Count > 0)
+            {
+
+                int prevBaseCents = totalTipTaxCents / previousMembers.Count;
+                int prevRemainderCents = totalTipTaxCents % previousMembers.Count;
+
+                decimal prevSplitAmount = prevBaseCents / 100m; // Convert back to decimal
+                decimal prevFirstMemberAmount = prevRemainderCents / 100m; // First member gets the remainder
+                foreach (var oldMember in previousMembers)
+                {
+                    // If statement to silence nullability warnings
+                    if (oldMember != null)
+                    {
+                        oldMember.AmountOwed -= prevSplitAmount;
+                    }
+                }
+                previousMembers[0].AmountOwed -= prevFirstMemberAmount; // Adjust first member's amount
+
+            }
+
+            // 2. Apply new split
+            if (currentMembers.Count > 0)
+            {
+                int baseCents = totalTipTaxCents / currentMembers.Count;
+                int remainderCents = totalTipTaxCents % currentMembers.Count;
+
+                decimal splitAmount = baseCents / 100m; // Convert back to decimal
+                decimal firstMemberAmount = remainderCents / 100m; // First member gets the remainder
+                foreach (var newMember in currentMembers)
+                {
+                    // If statement to silence nullability warnings
+                    if (newMember != null)
+                    {
+                        newMember.AmountOwed += splitAmount;
+                    }
+                }
+                currentMembers[0].AmountOwed += firstMemberAmount; // Adjust first member's amount
+
+            }
+        }
+
+        private async Task SyncCheckMembers()
+        {
+            var updateParameters = new List<Dictionary<string, object>>();
+
+            foreach (var member in CheckMembers)
+            {
+                var parameters = new Dictionary<string, object>
+                {
+                    { "id", member.Id },
+                    { "amountOwed", member.AmountOwed }
+                };
+                updateParameters.Add(parameters);
+            }
+
+            var updated = await CheckMemberClient.UpdateCheckMembers(updateParameters);
+            if (updated == null)
+            {
+                await Shell.Current.DisplayAlert("Error", "Failed to update check members.", "OK");
+                return;
+            }
+        }
+
+
         [RelayCommand]
         private async Task AddCheckMember()
         {
@@ -115,6 +197,7 @@ namespace Splitt.ViewModels
 
             if (checkMember != null)
             {
+                List<CheckMemberWrapper> previousMembers = CheckMembers.ToList(); // Store previous members for tip update
                 var vm = new CheckMemberWrapper(checkMember);
                 CheckMembers.Add(vm);
                 MemberName = "New Check Member"; // Reset the member name for the next input
@@ -122,6 +205,8 @@ namespace Splitt.ViewModels
                 {
                     wrapper.AvailableMembers.Add(vm);
                 }
+                UpdateMemberTipTax(CheckMembers.ToList(), previousMembers);
+                await SyncCheckMembers();
             }
             else
             {
@@ -139,17 +224,21 @@ namespace Splitt.ViewModels
                 await Shell.Current.DisplayAlert("Error", "Check member not found", "OK");
                 return;
             }
-            int response = await CheckMemberClient.DeleteCheckMember(checkMember.Id);
-            if (response == -1)
-            {
-                await Shell.Current.DisplayAlert("Error", "Failed to delete check member", "OK");
-                return;
-            }
+            List<CheckMemberWrapper> previousMembers = CheckMembers.ToList(); // Store previous members for tip update
             CheckMembers.Remove(checkMember);
             foreach (var wrapper in CheckItemWrapper)
             {
                 wrapper.AvailableMembers.Remove(checkMember);
 
+            }
+            UpdateMemberTipTax(CheckMembers.ToList(), previousMembers);
+            await SyncCheckMembers();
+
+            int response = await CheckMemberClient.DeleteCheckMember(checkMember.Id);
+            if (response == -1)
+            {
+                await Shell.Current.DisplayAlert("Error", "Failed to delete check member", "OK");
+                return;
             }
         }
 
@@ -159,6 +248,7 @@ namespace Splitt.ViewModels
         private async Task AssignItemToMember()
         {
             var updateParameters = new List<Dictionary<string, object>>();
+
             foreach (var member in CheckMembers)
             {
                 var parameters = new Dictionary<string, object>
@@ -175,6 +265,7 @@ namespace Splitt.ViewModels
                 await Shell.Current.DisplayAlert("Error", "Failed to update check members.", "OK");
                 return;
             }
+            await Shell.Current.GoToAsync($"{nameof(CheckResultView)}?checkId={CheckId}");
 
         }
 

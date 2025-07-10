@@ -125,7 +125,7 @@ namespace Splitt.ViewModels
         [RelayCommand]
         private async Task Submit()
         {
-            await Shell.Current.GoToAsync($"{nameof(SplitCheckItemView)}?checkId={CheckId}");
+            await Shell.Current.GoToAsync($"{nameof(SplitCheckItemView)}?checkId={CheckId}&tip={Tip}&tax={Tax}");
         }
     }
 
